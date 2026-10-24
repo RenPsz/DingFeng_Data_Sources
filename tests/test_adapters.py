@@ -254,7 +254,13 @@ def test_akshare_external_runtime_error_is_wrapped_as_source_error() -> None:
         source.kline(Symbol.parse("600000"), "day", "none", None, None, None)
 
 
-def test_baostock_external_runtime_error_is_wrapped_as_source_error() -> None:
+def test_baostock_external_runtime_error_is_wrapped_as_source_error(monkeypatch) -> None:
+    fake = SimpleNamespace(
+        login=lambda: SimpleNamespace(error_code="0", error_msg=""),
+        logout=lambda: None,
+    )
+    monkeypatch.setitem(__import__("sys").modules, "baostock", fake)
     source = BaostockSource(Mock())
+
     with pytest.raises(SourceError, match="baostock 查询失败"):
         source._with_session(lambda bs: (_ for _ in ()).throw(RuntimeError("socket closed")))

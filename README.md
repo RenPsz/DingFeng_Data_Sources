@@ -1,5 +1,8 @@
 # 中国金融数据源实测报告 & cnfin.py 使用说明
 
+[![CI](https://github.com/RenPsz/DingFeng_Data_Sources/actions/workflows/ci.yml/badge.svg)](https://github.com/RenPsz/DingFeng_Data_Sources/actions/workflows/ci.yml)
+
+> 仓库：**https://github.com/RenPsz/DingFeng_Data_Sources**
 > 当前版本：**v1.1.0**（生产审计修复版）　实测时间：2026-10-24　环境：Windows / Python 3.13.14
 > 网络：家庭宽带 + 本地代理（Clash 7897）
 > 测试标的：浦发银行 600000、平安银行 000001、上证指数、沪深300、300ETF 510300、创业板ETF 159915、北交所 430047
@@ -155,13 +158,21 @@ pro = ts.pro_api("你的token")
 
 ### 安装
 
-**方式一：按包安装（推荐，可得到 `cnfin` 命令）**
+**方式一：从 GitHub 获取**
+
+```bash
+git clone https://github.com/RenPsz/DingFeng_Data_Sources.git
+cd DingFeng_Data_Sources
+pip install .
+```
+
+**方式二：按包安装（本地已有源码时）**
 
 ```bash
 pip install .                       # 或 pip install dist/*.whl
 ```
 
-**方式二：单文件拷贝**
+**方式三：单文件拷贝**
 
 ```bash
 pip install requests pandas          # 最小依赖，只有这两个
