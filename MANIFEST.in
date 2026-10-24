@@ -1,0 +1,6 @@
+include docs/AUDIT.md
+include docs/TESTING.md
+include LICENSE
+include requirements.txt
+recursive-include tests *.py
+global-exclude __pycache__ *.py[cod]

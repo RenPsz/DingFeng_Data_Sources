@@ -1,0 +1,16 @@
+[OK  ] quote      tencent        1行    155ms 
+[OK  ] quote      sina           1行     91ms 
+[FAIL] quote      eastmoney      0行  11377ms SourceError: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection 
+[OK  ] kline      tencent        5行    158ms 
+[FAIL] kline      eastmoney      0行    292ms SourceError: ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection 
+[OK  ] kline      baostock       5行   3957ms 
+[OK  ] kline      sina           5行    130ms 
+[OK  ] list       akshare     5577行   7056ms 
+[FAIL] list       eastmoney      0行      0ms SourceBlocked: push2.eastmoney.com 近期连续连接失败，冷却中（可用 clear_dead_hosts() 重置）
+[OK  ] financial  eastmoney      2行    166ms 
+[OK  ] financial  baostock       6行   3556ms 
+[OK  ] macro      eastmoney      3行     54ms 
+[OK  ] macro      akshare        3行    251ms 
+[OK  ] minute     tencent       10行    138ms 
+
+通过 11/14 项

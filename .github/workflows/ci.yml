@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-test:
+    name: Python ${{ matrix.python-version }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        include:
+          - os: windows-latest
+            python-version: "3.13"
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install package and development dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Static checks
+        run: ruff check cnfin.py tests
+      - name: Offline unit and E2E tests
+        run: >-
+          python -m pytest -m "not network"
+          --cov=cnfin --cov-branch --cov-fail-under=70
+          --cov-report=xml:coverage.xml --cov-report=term-missing
+          --junitxml=junit.xml
+      - name: Upload test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-${{ matrix.os }}-${{ matrix.python-version }}
+          path: |
+            junit.xml
+            coverage.xml
+          if-no-files-found: error
+
+  build:
+    name: Build and install artifacts
+    runs-on: ubuntu-latest
+    needs: offline-test
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: python -m pip install build twine
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - name: Install wheel in a clean environment
+        run: |
+          python -m venv .smoke-venv
+          .smoke-venv/bin/python -m pip install dist/*.whl
+          .smoke-venv/bin/python -c "from cnfin import CNFin; assert not CNFin(cache=False).macro_catalog().empty"
+          .smoke-venv/bin/cnfin catalog >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/*
+          if-no-files-found: error

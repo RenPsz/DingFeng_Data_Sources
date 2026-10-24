@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cnfin-data"
+description = "Single-file China financial data access layer with source failover"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "cnfin contributors"}]
+dependencies = [
+  "requests>=2.31,<3",
+  "pandas>=2.0,<4",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+baostock = ["baostock>=0.9"]
+akshare = ["akshare>=1.14"]
+dev = [
+  "build>=1.2",
+  "pytest>=8",
+  "pytest-cov>=5",
+  "ruff>=0.6",
+  "twine>=5",
+]
+
+[project.scripts]
+cnfin = "cnfin:_cli"
+
+[tool.setuptools]
+py-modules = ["cnfin"]
+
+[tool.setuptools.dynamic]
+version = {attr = "cnfin.__version__"}
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+markers = [
+  "e2e: end-to-end tests through public API or CLI",
+  "integration: tests with external services or optional dependencies",
+  "network: real Internet access; excluded from default CI",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["cnfin"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = [
+  "if __name__ == .__main__.:",
+  "raise NotImplementedError",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E9", "F63", "F7", "F82"]
