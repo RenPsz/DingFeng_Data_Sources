@@ -1,5 +1,4 @@
-include docs/AUDIT.md
-include docs/TESTING.md
+recursive-include docs *.md
 include LICENSE
 include requirements.txt
 recursive-include tests *.py

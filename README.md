@@ -398,7 +398,7 @@ python -m build                                 # 构建 wheel/sdist
 | `pyproject.toml` + `requirements.txt` | 打包与依赖声明 | 想 `pip install` 或跑测试时 |
 | `tests/` | 85 项离线测试 + 5 项真实网络测试 | 改代码时 |
 | `.github/workflows/` | CI、每周真实源巡检、tag 发布 | 推到 GitHub 后 |
-| `docs/` | `AUDIT.md` 审计、`TESTING.md` 测试策略、`overview.md` 交付摘要 | 需要追责/交接时 |
+| `docs/` | 审计、测试策略、Tushare 迁移方案、交付摘要 | 需要追责/交接时 |
 | `research/` | 本次数据源调研脚本与原始证据（42 项探测、健康快照） | 想复跑调研时 |
 | `dist/` | 已构建好的 wheel / sdist | 直接安装或分发时 |
 | `.venv/` | 本地测试环境（约 288MB，可再生） | 跑测试时；只使用单文件可删 |
@@ -416,3 +416,21 @@ python -m venv .venv
 .venv\Scripts\python cnfin.py demo
 .venv\Scripts\python research\probe_sources.py
 ```
+
+---
+
+## 十、未来数据源升级：Tushare（规划中）
+
+**当前 v1.1.0 尚未实现 Tushare 适配器**，不读取 `TUSHARE_TOKEN`，也不要在生产代码中假设它已可用。
+
+已确定的未来方向：
+
+- Tushare 作为**日频行情、复权、财务、分红、交易日历**的付费主源；
+- 腾讯继续作为实时行情和分钟线主源；
+- 免费源只做抽样校验；生产 `strict` 模式不静默降级到口径不同的源；
+- 成交量/成交额、复权因子、财务公告日（PIT）必须显式标准化；
+- 先用 2000 积分档验证，再决定是否升级，不直接购买高价套餐；
+- Token 只从环境变量或 Secret 读取，不进入代码与公开仓库。
+
+完整的接入边界、数据契约、成本、故障语义、测试与分阶段验收标准见
+[`docs/TUSHARE.md`](docs/TUSHARE.md)。

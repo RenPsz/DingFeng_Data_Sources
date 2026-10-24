@@ -15,6 +15,7 @@
 | `AUDIT.md` | 带行号的审计清单、修复状态、12 项剩余 P2 与分阶段路线 |
 | `TESTING.md` | 测试金字塔、marker 规范、CI/CD、发布回滚、扩展源测试清单 |
 | `README.md` | 更新安装、代理、数据契约、失败语义、缓存安全与质量工程说明 |
+| `docs/TUSHARE.md` | Tushare 付费主源的未来接入方案（明确标注规划中，未实现） |
 | `dist/` | `cnfin_data-1.1.0-py3-none-any.whl` + sdist |
 
 ## 关键决策
