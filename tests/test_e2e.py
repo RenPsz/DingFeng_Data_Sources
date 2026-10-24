@@ -18,6 +18,8 @@ def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
         env=env,
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         timeout=30,
         check=False,
     )
@@ -44,7 +46,8 @@ assert fin.is_trade_day('2024-01-06') is False
 print('offline-e2e-ok', cnfin.__version__)
 """
     result = subprocess.run(
-        [sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, timeout=30
+        [sys.executable, "-c", code], cwd=ROOT, capture_output=True,
+        text=True, encoding="utf-8", errors="replace", timeout=30,
     )
 
     assert result.returncode == 0, result.stderr
